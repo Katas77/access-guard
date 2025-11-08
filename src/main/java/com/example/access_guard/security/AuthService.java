@@ -4,11 +4,11 @@ package com.example.access_guard.security;
 import com.example.access_guard.dto.request.CreateUserRequest;
 import com.example.access_guard.dto.request.LoginRequest;
 import com.example.access_guard.dto.response.AuthResponse;
+import com.example.access_guard.exception.AlreadyExistsException;
 import com.example.access_guard.exception.RefreshTokenException;
 import com.example.access_guard.model.RoleTypeAuth;
 import com.example.access_guard.model.postgres.User;
 import com.example.access_guard.repository.UserRepository;
-import com.example.access_guard.security.AppUserDetails;
 import com.example.access_guard.security.jwt.JwtUtils;
 import com.example.access_guard.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
@@ -71,7 +71,7 @@ public class AuthService {
     // === Регистрация ===
     public void register(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Email already exists");
+            throw new AlreadyExistsException("Email already exists");
         }
 
         User user = User.builder()
