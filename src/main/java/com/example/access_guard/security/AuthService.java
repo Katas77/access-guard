@@ -1,5 +1,6 @@
 package com.example.access_guard.security;
 
+
 import com.example.access_guard.dto.request.CreateUserRequest;
 import com.example.access_guard.dto.request.LoginRequest;
 import com.example.access_guard.dto.response.AuthResponse;
@@ -7,6 +8,7 @@ import com.example.access_guard.exception.RefreshTokenException;
 import com.example.access_guard.model.RoleTypeAuth;
 import com.example.access_guard.model.postgres.User;
 import com.example.access_guard.repository.UserRepository;
+import com.example.access_guard.security.AppUserDetails;
 import com.example.access_guard.security.jwt.JwtUtils;
 import com.example.access_guard.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -23,13 +26,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class SecurityService {
+public class AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final RefreshTokenService refreshTokenService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
 
     public AuthResponse authenticateUser(LoginRequest request) {
         String email = request.email().trim();
@@ -64,6 +68,7 @@ public class SecurityService {
         );
     }
 
+    // === Регистрация ===
     public void register(CreateUserRequest request) {
         if (userRepository.existsByEmail(request.email())) {
             throw new IllegalArgumentException("Email already exists");
@@ -79,6 +84,7 @@ public class SecurityService {
         userRepository.save(user);
     }
 
+    // === Обновление токенов ===
     public AuthResponse refreshToken(String refreshTokenValue) {
         return refreshTokenService.findByRefreshToken(refreshTokenValue)
                 .map(refreshTokenService::checkRefreshToken)
@@ -102,10 +108,24 @@ public class SecurityService {
                 .orElseThrow(() -> new RefreshTokenException("Invalid refresh token"));
     }
 
+    // === Выход из системы ===
     public void logout() {
         var auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof AppUserDetails userDetails) {
             refreshTokenService.deleteByUserId(userDetails.getId());
+        }
+    }
+
+    // === Валидация токена из заголовка (для /validate-token) ===
+    public boolean validateToken(String headerAuth) {
+        if (!StringUtils.hasText(headerAuth) || !headerAuth.startsWith("Bearer ")) {
+            return false;
+        }
+        try {
+            String token = headerAuth.substring(7);
+            return jwtUtils.validateToken(token);
+        } catch (Exception e) {
+            return false;
         }
     }
 }

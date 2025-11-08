@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Date;
 
-import static com.example.access_guard.security.JwtConstants.SECRET;
+import static com.example.access_guard.security.jwt.JwtConstants.SECRET;
 
 @Component
 @Slf4j
@@ -49,13 +49,12 @@ public class JwtUtils {
         }
     }
 
-    // Единственный метод валидации — правильно и безопасно
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
                     .build()
-                    .parseClaimsJws(token);
+                    .parseClaimsJws(token);// Если токен успешно распарсен, значит подпись верна и он не просрочен
             return true;
         } catch (JwtException e) {
             log.warn("Invalid JWT token: {}", e.getMessage());
