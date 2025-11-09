@@ -1,4 +1,4 @@
-package com.example.access_guard.security;
+package com.example.access_guard.service;
 
 
 import com.example.access_guard.dto.request.CreateUserRequest;
@@ -9,8 +9,8 @@ import com.example.access_guard.exception.RefreshTokenException;
 import com.example.access_guard.model.RoleTypeAuth;
 import com.example.access_guard.model.postgres.User;
 import com.example.access_guard.repository.UserRepository;
+import com.example.access_guard.security.AppUserDetails;
 import com.example.access_guard.security.jwt.JwtUtils;
-import com.example.access_guard.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

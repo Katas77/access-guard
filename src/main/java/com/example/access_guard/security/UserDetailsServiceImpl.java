@@ -1,6 +1,5 @@
 package com.example.access_guard.security;
 
-
 import com.example.access_guard.model.postgres.User;
 import com.example.access_guard.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
