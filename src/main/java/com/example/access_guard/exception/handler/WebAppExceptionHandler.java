@@ -135,14 +135,12 @@ public class WebAppExceptionHandler {
         log.warn(message);
         return buildResponse(message, request);
     }
-
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Error handleAllUncaughtException(Exception ex, WebRequest request) {
         log.error("Unhandled exception: {}", ex.getMessage(), ex);
         return buildResponse(ex.getMessage(), request);
     }
-
     // Вспомогательные методы
     private Error buildResponse(Exception ex, WebRequest webRequest) {
         log.debug("Building error response for exception: {}", ex.getClass().getSimpleName());
