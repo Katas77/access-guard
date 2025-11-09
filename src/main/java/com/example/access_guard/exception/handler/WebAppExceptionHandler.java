@@ -20,8 +20,6 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.stream.Collectors;
 
-
-
 @RestControllerAdvice
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -46,25 +44,29 @@ public class WebAppExceptionHandler {
     @ExceptionHandler(RefreshTokenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public Error handleRefreshTokenException(RefreshTokenException ex, WebRequest request) {
-        return buildResponse(ex, request);
+        return buildResponse(ex.getMessage(), request);
     }
-
+    @ExceptionHandler(CaptchaException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Error handleCaptchaException(CaptchaException ex, WebRequest request) {
+        return buildResponse(ex.getMessage(), request);
+    }
     @ExceptionHandler(AlreadyExistsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Error handleAlreadyExists(AlreadyExistsException ex, WebRequest request) {
-        return buildResponse(ex, request);
+        return buildResponse(ex.getMessage(), request);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Error handleEntityNotFound(EntityNotFoundException ex, WebRequest request) {
-        return buildResponse(ex, request);
+        return buildResponse(ex.getMessage(), request);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Error handleUnauthorized(UnauthorizedException ex, WebRequest request) {
-        return buildResponse(ex, request);
+        return buildResponse(ex.getMessage(), request);
     }
 
 

@@ -13,11 +13,10 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @RequestMapping("/api/v1/test")
 @RequiredArgsConstructor
 public class AuthValidationController {
-
     private final AuthService authService;
 
     @GetMapping()
     public String validateToken(@RequestHeader(AUTHORIZATION) String authHeader) {
-            return authHeader + "   Токен валиден: не протух и подпись корректна.";
+        return authHeader + "   Токен валиден: не протух и подпись корректна.";
     }
 }

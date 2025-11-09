@@ -6,7 +6,6 @@ import com.example.access_guard.dto.request.RefreshRequest;
 import com.example.access_guard.dto.response.AuthResponse;
 import com.example.access_guard.dto.response.BasicResponse;
 import com.example.access_guard.service.AuthService;
-import com.example.access_guard.service.CaptchaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +19,9 @@ public class AuthController {
 
     private final AuthService service;
 
-    private final CaptchaService captchaService;
 
     @PostMapping("/register")
     public ResponseEntity<BasicResponse> registerUser(@RequestBody CreateUserRequest request) {
-        if (captchaService.verifyTokenAndConsume(request.captchaToken())) {
-            return ResponseEntity.badRequest()
-                    .body(new BasicResponse(LocalDateTime.now(), "Неверный или просроченный captcha token"));
-        }
         service.register(request);
         return ResponseEntity
                 .status(201)
