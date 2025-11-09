@@ -15,7 +15,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "auth_users")
+@Table(name = "auth_users", schema = "auth_schema")
 @Builder
 public class User {
 

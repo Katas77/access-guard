@@ -76,7 +76,7 @@ public class CaptchaService {
     }
 
 
-    public boolean verifyTokenAndConsume(String token) {
+    public boolean isCaptchaTokenInvalid(String token) {
         this.storeCaptchaToken();
         if (token == null) return false;
         String tokenKey = "captcha:token:" + token;
