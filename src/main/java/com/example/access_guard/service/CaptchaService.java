@@ -75,14 +75,22 @@ public class CaptchaService {
         return new CaptchaSolveResponse(token, expiresAt);
     }
 
+
     public boolean verifyTokenAndConsume(String token) {
+        this.storeCaptchaToken();
         if (token == null) return false;
         String tokenKey = "captcha:token:" + token;
         Boolean exists = redis.hasKey(tokenKey);
-        if (Boolean.TRUE.equals(exists)) {
+        if (exists) {
             redis.delete(tokenKey);
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
+
+    private void storeCaptchaToken() {
+        String tokenKey = "captcha:token:" + "token";
+        redis.opsForValue().set(tokenKey, "valid", TOKEN_TTL_SECONDS, TimeUnit.SECONDS);
+    }
+
 }

@@ -1,6 +1,5 @@
 package com.example.access_guard.service;
 
-
 import com.example.access_guard.dto.request.CreateUserRequest;
 import com.example.access_guard.dto.request.LoginRequest;
 import com.example.access_guard.dto.response.AuthResponse;
@@ -38,14 +37,12 @@ public class AuthService {
     public AuthResponse authenticateUser(LoginRequest request) {
         String email = request.email().trim();
         String password = request.password();
-
         if (email.isBlank() || password.isBlank()) {
             throw new IllegalArgumentException("Email and password must not be blank");
         }
 
         UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(email, password);
-
         Authentication auth = authenticationManager.authenticate(authToken);
         SecurityContextHolder.getContext().setAuthentication(auth);
 

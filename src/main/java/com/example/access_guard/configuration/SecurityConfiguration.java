@@ -53,7 +53,7 @@ public class SecurityConfiguration {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authz ->
                         authz
-                                .requestMatchers("/api/v1/auth/register/**").permitAll()
+                                .requestMatchers("/api/v1/auth/**").permitAll()
                                 .requestMatchers("/api/v1/captcha/**").permitAll()
                                 .anyRequest().authenticated()
                 )
