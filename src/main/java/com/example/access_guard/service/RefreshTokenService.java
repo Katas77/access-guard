@@ -27,7 +27,7 @@ public class RefreshTokenService {
 
     public RefreshToken createRefreshToken(Long userId) {
         String tokenValue = UUID.randomUUID().toString();
-        long id = System.nanoTime(); // уникальный ID (альтернатива — не использовать id как @Id)
+        long id = System.nanoTime();
         var refreshToken = RefreshToken.builder()
                 .id(id)
                 .userId(userId)
@@ -36,7 +36,6 @@ public class RefreshTokenService {
                 .build();
         return repository.save(refreshToken);
     }
-
     public RefreshToken checkRefreshToken(RefreshToken refreshToken) {
         if (refreshToken.getExpiryDate().isBefore(Instant.now())) {
             repository.delete(refreshToken);

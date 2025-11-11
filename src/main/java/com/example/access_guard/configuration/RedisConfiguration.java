@@ -14,7 +14,6 @@ import org.springframework.data.redis.repository.configuration.EnableRedisReposi
 import java.time.Duration;
 import java.util.Collections;
 
-
 @Configuration
 @EnableRedisRepositories(
         keyspaceConfiguration = RedisConfiguration.RefreshTokenKeyspaceConfiguration.class,
@@ -22,9 +21,7 @@ import java.util.Collections;
 )
 public class RedisConfiguration {
 
-    /**
-     * Время жизни токенов обновления (срок жизни равный 30 дн а затем он будет автоматически удалён из хранилища Redis).
-     */
+    /**Время жизни токенов обновления (срок жизни равный 30 дн а затем он будет автоматически удалён из хранилища Redis).*/
     @Value("${app.jwt.refreshTokenExpiration}")
     private Duration refreshTokenExpiration;
 

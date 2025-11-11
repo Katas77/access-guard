@@ -32,7 +32,6 @@ spring:
     password: accessguard_pass
     hikari:
       schema: auth_schema
-      connection-init-sql: CREATE SCHEMA IF NOT EXISTS auth_schema
       connection-timeout: 10000
 
 ---
@@ -43,7 +42,7 @@ spring:
   datasource:
     url: jdbc:postgresql://your-prod-db-host:5432/accessguard_db
     username: accessguard_user
-    password: ${ACCESSGUARD_DB_PASSWORD}
+    password: accessguard_pass
     hikari:
       schema: auth_schema
       connection-init-sql: CREATE SCHEMA IF NOT EXISTS auth_schema

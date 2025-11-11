@@ -23,7 +23,6 @@ public class CaptchaConfig {
         props.setProperty("kaptcha.noise.impl", "com.google.code.kaptcha.impl.DefaultNoise");
         props.setProperty("kaptcha.obscurificator.impl", "com.google.code.kaptcha.impl.WaterRipple");
 
-
         Config config = new Config(props);
         DefaultKaptcha kaptcha = new DefaultKaptcha();
         kaptcha.setConfig(config);
