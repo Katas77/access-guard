@@ -1,0 +1,13 @@
+spring:
+  redis:
+    host: ${SPRING_DATA_REDIS_HOST:localhost}
+    port: ${SPRING_DATA_REDIS_PORT:6379}
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:init_test_schema.sql
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.PostgreSQLDialect

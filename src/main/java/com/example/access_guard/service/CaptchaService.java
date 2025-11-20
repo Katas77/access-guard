@@ -87,7 +87,7 @@ public class CaptchaService {
         return true;
     }
 
-    private void storeCaptchaToken() {
+   public void storeCaptchaToken() {
         String tokenKey = "captcha:token:" + "token";
         redis.opsForValue().set(tokenKey, "valid", TOKEN_TTL_SECONDS, TimeUnit.SECONDS);
     }

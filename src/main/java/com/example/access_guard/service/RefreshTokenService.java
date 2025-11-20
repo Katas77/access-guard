@@ -6,9 +6,11 @@ import com.example.access_guard.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,6 +38,7 @@ public class RefreshTokenService {
                 .build();
         return repository.save(refreshToken);
     }
+
     public RefreshToken checkRefreshToken(RefreshToken refreshToken) {
         if (refreshToken.getExpiryDate().isBefore(Instant.now())) {
             repository.delete(refreshToken);
@@ -44,7 +47,11 @@ public class RefreshTokenService {
         return refreshToken;
     }
 
+    @Transactional
     public void deleteByUserId(Long userId) {
-        repository.deleteByUserId(userId);
+        List<RefreshToken> tokens = repository.findByUserId(userId);
+        if (!tokens.isEmpty()) {
+            repository.deleteAll(tokens);
+        }
     }
 }
