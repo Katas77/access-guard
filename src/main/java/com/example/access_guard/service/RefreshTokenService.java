@@ -42,7 +42,7 @@ public class RefreshTokenService {
     public RefreshToken checkRefreshToken(RefreshToken refreshToken) {
         if (refreshToken.getExpiryDate().isBefore(Instant.now())) {
             repository.delete(refreshToken);
-            throw new RefreshTokenException("Refresh token was expired. Please sign in again.");
+            throw new RefreshTokenException("Срок действия токена обновления истёк. Пожалуйста, войдите снова.");
         }
         return refreshToken;
     }

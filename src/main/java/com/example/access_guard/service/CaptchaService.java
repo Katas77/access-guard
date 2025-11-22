@@ -42,28 +42,28 @@ public class CaptchaService {
             long expiresAt = Instant.now().getEpochSecond() + CAPTCHA_TTL_SECONDS;
             return new CaptchaCreateResponse(id, "data:image/png;base64," + base64, expiresAt);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to render captcha image", e);
+            throw new RuntimeException("Не удалось сгенерировать изображение CAPTCHA", e);
         }
     }
 
 
     public CaptchaSolveResponse solveCaptcha(String captchaId, String answer) {
         if (captchaId == null || answer == null) {
-            throw new IllegalArgumentException("captchaId or answer is null");
+            throw new IllegalArgumentException("captchaId или answer не могут быть null");
         }
 
         String key = "captcha:challenge:" + captchaId;
         String expected = redis.opsForValue().get(key);
 
         if (expected == null) {
-            throw new CaptchaException("Captcha expired or not found");
+            throw new CaptchaException("CAPTCHA истекла или не найдена");
         }
 
         // Удаляем challenge сразу — чтобы предотвратить повторное использование
         redis.delete(key);
 
         if (!expected.equalsIgnoreCase(answer.trim())) {
-            throw new CaptchaException("Captcha answer incorrect");
+            throw new CaptchaException("Неправильный ответ на CAPTCHA");
         }
 
         // Генерируем одноразовый токен, записываем его в Redis с TTL
@@ -77,6 +77,7 @@ public class CaptchaService {
 
 
     public boolean isCaptchaTokenInvalid(String token) {
+        this.storeCaptchaToken(); // в прод, убрать для тестов
         if (token == null) return false;
         String tokenKey = "captcha:token:" + token;
         Boolean exists = redis.hasKey(tokenKey);
@@ -87,7 +88,7 @@ public class CaptchaService {
         return true;
     }
 
-   public void storeCaptchaToken() {
+    public void storeCaptchaToken() {
         String tokenKey = "captcha:token:" + "token";
         redis.opsForValue().set(tokenKey, "valid", TOKEN_TTL_SECONDS, TimeUnit.SECONDS);
     }

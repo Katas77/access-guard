@@ -39,7 +39,7 @@ public class AuthService {
         String email = request.email().trim();
         String password = request.password();
         if (email.isBlank() || password.isBlank()) {
-            throw new IllegalArgumentException("Email and password must not be blank");
+            throw new IllegalArgumentException("Email и пароль не могут быть пустыми");
         }
 
         UsernamePasswordAuthenticationToken authToken =
@@ -69,10 +69,10 @@ public class AuthService {
     // === Регистрация ===
     public void register(CreateUserRequest request) {
         if (captchaService.isCaptchaTokenInvalid(request.captchaToken())) {
-            throw new CaptchaException("Неверный или просроченный captcha toke");
+            throw new CaptchaException("Неверный или просроченный токен CAPTCHA");
         }
         if (userRepository.existsByEmail(request.email())) {
-            throw new AlreadyExistsException("Email already exists");
+            throw new AlreadyExistsException("Пользователь с таким email уже существует");
         }
 
         User user = User.builder()
@@ -91,7 +91,7 @@ public class AuthService {
                 .map(refreshTokenService::checkRefreshToken)
                 .map(refreshToken -> {
                     User user = userRepository.findById(refreshToken.getUserId())
-                            .orElseThrow(() -> new RefreshTokenException("User not found"));
+                            .orElseThrow(() -> new RefreshTokenException("Пользователь не найден"));
                     String newAccessToken = jwtUtils.generateTokenFromEmail(user.getEmail());
                     var newRefreshToken = refreshTokenService.createRefreshToken(user.getId());
                     return new AuthResponse(
@@ -106,7 +106,7 @@ public class AuthService {
                                     .toList()
                     );
                 })
-                .orElseThrow(() -> new RefreshTokenException("Invalid refresh token"));
+                .orElseThrow(() -> new RefreshTokenException("Недействительный refresh-токен"));
     }
 
     // === Выход из системы ===
